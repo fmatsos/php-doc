@@ -1,0 +1,24 @@
+{
+  "settings": {
+    "title": "PHP",
+    "project": "/fmatsos/php-doc",
+    "docsRepoUrl": "https://github.com/fmatsos/php-doc",
+    "folders": [],
+    "branch": "main",
+    "excludeFolders": [
+      ".github"
+    ],
+    "description": "The PHP documentation",
+    "excludeFiles": [
+      "CHANGELOG.md",
+      "changelog.md",
+      "CHANGELOG.mdx",
+      "changelog.mdx",
+      "LICENSE.md",
+      "license.md",
+      "CODE_OF_CONDUCT.md",
+      "code_of_conduct.md"
+    ],
+    "type": "repo"
+  }
+}
