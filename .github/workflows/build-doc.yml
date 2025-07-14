@@ -1,30 +1,17 @@
-name: Build PHP Documentation
+name: Build PHP Documentation (Docker)
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  build:
+  build-doc:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout current repository
         uses: actions/checkout@v3
-
-      - name: Install required dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            git xsltproc docbook-xsl docbook-xml \
-            libxml2-utils make unzip wget
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
 
       - name: Clone php/doc-en
         run: |
@@ -34,14 +21,20 @@ jobs:
         run: |
           git clone --depth=1 https://github.com/php/doc-base.git doc-base
 
-      - name: Build HTML documentation
+      - name: Clone php/phd
         run: |
-          make -C doc-base phpweb V=1 DOC_LANG=$PWD/doc-en
-          mkdir -p output
-          mv doc-base/output output/html
+          git clone --depth=1 https://github.com/php/phd.git phd
 
-      - name: Upload as GitHub Artifact
+      - name: Build documentation with Docker (via Make)
+        working-directory: doc-en
+        run: |
+          # Build using the provided Dockerfile and Makefile
+          make php
+          mkdir -p ../doc
+          cp -r output/php-web/* ../doc
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: php-doc-html
+          name: php-web-doc
           path: doc/
