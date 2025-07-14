@@ -1,4 +1,6 @@
 name: Build PHP Documentation (Docker)
+permissions:
+  contents: write
 
 on:
   push:
@@ -29,7 +31,7 @@ jobs:
         working-directory: doc-en
         run: |
           # Build using the provided Dockerfile and Makefile
-          make php
+          make php-chunked-xhtml
           mkdir -p ../doc
           cp -r output/php-web/* ../doc
 
@@ -38,3 +40,18 @@ jobs:
         with:
           name: php-web-doc
           path: doc/
+
+      - name: Copy generated docs to /doc
+        run: |
+          rm -rf doc/*
+          cp -r output/php-web/* doc/
+
+      - name: Commit and push updated documentation
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add doc/
+          git commit -m "Update PHP documentation [auto]" || echo "No changes to commit"
+          git push origin HEAD
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
