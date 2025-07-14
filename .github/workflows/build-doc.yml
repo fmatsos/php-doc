@@ -32,20 +32,10 @@ jobs:
         run: |
           # Build using the provided Dockerfile and Makefile
           make
+          rm -rf ../doc
           mkdir -p ../doc
-          cp -r output/php-web/* ../doc
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: php-web-doc
-          path: doc/
-
-      - name: Copy generated docs to /doc
-        run: |
-          rm -rf doc/*
-          cp -r output/php-web/* doc/
-
+          cp -r output/php-chunked-xhtml/* doc/
+          
       - name: Commit and push updated documentation
         run: |
           git config user.name "GitHub Actions"
